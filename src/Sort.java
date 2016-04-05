@@ -11,8 +11,13 @@ import java.io.OutputStreamWriter;
 
 public class Sort {
 	public static void main(String[] args) {
+
+		String fileName = "F://nick//github//P92LogParse//log.txt";
+		if(args[0] != null || args[0] != "") {
+			fileName = args[0].replace("\\", "//");
+		}
 		
-		File log = new File("F://nick//github//P92LogParse//log.txt");
+		File log = new File(fileName);
 		BufferedReader br = null;
 		BufferedWriter bw = null;
 		String lineRead = null;
