@@ -130,26 +130,7 @@ public class Sort {
 			sb.append(substString+" ");
 			index+=step;
 			if(i == 1) {
-				String len = sb.substring(sb.length()-8, sb.length()).replace(" ", "");	//得到长度的字串
-				String number = "";
-				//将长度字串中非数据符号去掉
-				for(int j = 0; j < len.length();j++) {
-					if ((len.charAt(j) >= '0' && len.charAt(j) <= '9') ||
-							(len.charAt(j) >= 'A' && len.charAt(j) <= 'F')) {
-						number += len.charAt(j);
-					}
-				}
-				//开始为0时，0去掉
-				int k = 0;
-				for(; k < number.length();) {
-					if(number.charAt(k) == '0') {
-						k++;
-					}else {
-						break;
-					}
-				}
-				number = number.substring(k);
-				datacount = Integer.parseInt(number, 16);
+				datacount = transStrToNumber(sb, sb.length()-8, sb.length());
 			}
 		}
 		sb.append("\n");
@@ -159,11 +140,18 @@ public class Sort {
 		while(isNotEnd) {
 			length = 4;
 			for(int i = 0; i < length; i++) {
-				String substring = tag.substring(index,index+step);
+				String substring = "";
+				try{
+					substring = tag.substring(index,index+step);
+				}catch (Exception e) {
+					System.out.println("Error------------------------------------------------------Error");
+					System.out.println("tag.length()" + tag.length());
+					System.out.println("sb = " + sb.toString());
+				}
 				sb.append(substring + " ");
 				index += step;
 				if(i == 3) {
-					int len = Integer.parseInt(substring, 16);
+					int len = transStrToNumber(sb,sb.length()-7, sb.length());
 					length += len;
 				}
 				count++;
@@ -184,5 +172,32 @@ public class Sort {
 		}
 		sb.append("\n");
 		return sb.toString();
+	}
+	
+	public static int transStrToNumber(StringBuffer sb,int start ,int end) { 
+		if(sb == null)
+			return 0;
+		int datacount = 0;
+		String len = sb.substring(start, end).replace(" ", "");	//得到长度的字串
+		String number = "";
+		//将长度字串中非数据符号去掉
+		for(int j = 0; j < len.length();j++) {
+			if ((len.charAt(j) >= '0' && len.charAt(j) <= '9') ||
+					(len.charAt(j) >= 'A' && len.charAt(j) <= 'F')) {
+				number += len.charAt(j);
+			}
+		}
+		//开始为0时，0去掉
+//		int k = 0;
+//		for(; k < number.length();) {
+//			if(number.charAt(k) == '0') {
+//				k++;
+//			}else {
+//				break;
+//			}
+//		}
+//		number = number.substring(k);
+		datacount = Integer.parseInt(number, 16);
+		return datacount;
 	}
 }
