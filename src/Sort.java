@@ -7,12 +7,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Sort {
 	public static void main(String[] args) {
 
 		String fileName = "F://nick//github//P92LogParse//log.txt";
+		
 		if(args[0] != null || args[0] != "") {
 			fileName = args[0].replace("\\", "//");
 		}

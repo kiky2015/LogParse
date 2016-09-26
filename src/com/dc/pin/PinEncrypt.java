@@ -14,6 +14,13 @@ public class PinEncrypt {
 		String pinEncryptData = getPin(pin, cardno);
 		System.out.println("pin明文 : " + pin +" 。卡号 :" + cardno + " 。pinkey明文 : " + pinkey + " 。 pin密 文 :	" + pinEncryptData);
 		
+		String key ="3BC07ACFD354B5944CD5617D79C3B82B";
+		String data = "9D46CB7C0D48CAD39D46CB7C0D48CAD3";
+		String data2 = "95F5CDB78897DA3095F5CDB78897DA30";
+
+		byte[] decryptMode = DES3Utils.decryptMode(hexStr2Bytes(key), hexStr2Bytes(data2));
+		String ssss = bytesToHexString(decryptMode);
+		System.out.println(ssss);
 	}
 	
 	/**
@@ -56,7 +63,7 @@ public class PinEncrypt {
 		
 		byte[] encData = hexStr2Bytes(PAN_XOR_PIN);  //将pin异或pan后的数据转成byte类型
 		byte[] keydata = hexStr2Bytes(pinkey);		 //将pinkey明文转成byte类型
-		byte[] pinEncryptMode = DES3Utils.encryptMode(keydata, encData);	//得到pin密文
+		byte[] pinEncryptMode = DES3Utils.decryptMode(keydata, encData);	//得到pin密文
 		pinEnc = bytesToHexString(pinEncryptMode);
 		
 		return pinEnc;

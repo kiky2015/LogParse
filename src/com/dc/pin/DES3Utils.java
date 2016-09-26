@@ -69,18 +69,10 @@ public class DES3Utils {
 			byte[] keyBytes = new byte[24];
 			System.arraycopy(key, 0, keyBytes, 0, 16);
 			System.arraycopy(key, 0, keyBytes, 16, 8);
-
-			byte[] srcBytes = new byte[24];
-			System.arraycopy(src, 0, srcBytes, 0, 16);
-			byte[] end = { (byte)0xB5, 0x55, (byte)0xC1, 0x3E, 0x73, 0x4C, (byte)0xE7, 0x48 };
-			System.arraycopy(end, 0, srcBytes, 16, 8);
-			
-			// 生成密钥  
 			SecretKey deskey = new SecretKeySpec(keyBytes, Algorithm);  
-			// 解密  
-			Cipher c1 = Cipher.getInstance(Algorithm);  
-			c1.init(Cipher.DECRYPT_MODE, deskey);  
-			return c1.doFinal(srcBytes);  
+			Cipher c1 = Cipher.getInstance("DESede/ECB/NOPadding");  
+			c1.init(Cipher.DECRYPT_MODE, deskey); 
+			return c1.doFinal(src);  
 		} catch (java.security.NoSuchAlgorithmException e1) {  
 			e1.printStackTrace();  
 		} catch (javax.crypto.NoSuchPaddingException e2) {  
@@ -91,6 +83,65 @@ public class DES3Utils {
 
 		return null;  
 	}  
+	
+//	public static byte[] decryptMode(byte[] keybyte, byte[] src) {  
+//		try {  
+//			// �����Կ  
+//			byte[] kb = new byte[24];
+//			if(keybyte.length == 16){
+//				System.arraycopy(keybyte, 0, kb, 0, 16);
+//				System.arraycopy(keybyte, 0, kb, 16, 8);
+//			}else if(keybyte.length == 24){
+//				System.arraycopy(keybyte, 0, kb, 0, 24);
+//			}else{
+//				return null;
+//			}
+//			SecretKey deskey = new SecretKeySpec(kb, Algorithm);  
+//			// ����  
+//			Cipher c1 = Cipher.getInstance("DESede/ECB/NOPadding");  
+//			c1.init(Cipher.DECRYPT_MODE, deskey);  
+//			return c1.doFinal(src);  
+//		} catch (java.security.NoSuchAlgorithmException e1) {  
+//			e1.printStackTrace();  
+//		} catch (javax.crypto.NoSuchPaddingException e2) {  
+//			e2.printStackTrace();  
+//		} catch (java.lang.Exception e3) {  
+//			e3.printStackTrace();  
+//		}  
+//		return null;  
+//	}
+	
+	public static byte[] decryptMode(String key ,String src){
+
+		if(key.length() == 16){
+			key = key + key.substring(0,8);
+		}
+		byte[] keyBytes = StringToByteArray(key.substring(0, 24));
+		byte[] decoded= decryptMode(keyBytes, StringToByteArray(src));
+		if(decoded == null){
+			return null;
+		}
+		return decoded;
+	}
+	
+	public static char[] ByteToCharArray(byte[] bs){
+		int bsl = bs.length;
+		char[] charArray=new char[bsl];
+		for(int i=0; i<bsl;i++){
+			charArray[i]=(char) (((char)bs[i]) & 0x00FF);
+		}
+		return charArray;
+	}
+	
+	public static byte[] StringToByteArray(String s){
+		int sl = s.length();
+		byte[] charArray=new byte[sl];
+		for(int i=0; i<sl;i++){
+			char charElement=s.charAt(i);
+			charArray[i]=(byte)charElement;
+		}
+		return charArray;
+	}
 
 	/**  
 	 * 字符串转为16进制  
@@ -147,18 +198,6 @@ public class DES3Utils {
 		}  
 		return hs.toUpperCase();  
 	} 
-
-	/**
-	 * 解密
-	 * @param key  解密密钥key
-	 * @param src  需要解密的字符串
-	 * @return     解密后的字符串
-	 */
-	public static String decryptMode(String key ,String src){
-		byte[] keyBytes = key.substring(0, 24).getBytes();
-		byte[] decoded= decryptMode(keyBytes, parseHexStr2Byte(src));
-		return new String(decoded);
-	}
 
 	/**将二进制转换成16进制 
 	 * @param buf 
