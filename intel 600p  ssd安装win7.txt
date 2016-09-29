@@ -1,0 +1,29 @@
+一、准备工具
+1、安装了win10的电脑一台
+2、win10 iso文件
+3、win7 iso 文件
+4、Ultraiso
+5、Win7 NVMe 补丁 （http://hotfixv4.microsoft.com/Windows%207/Windows%20Server2008%20R2%20SP1/sp2/Fix487764/7600/free/477475_intl_x64_zip.exe）
+6、8G U盘一个
+
+二、U盘启动盘制作
+1、进入win10系统
+2、 Ultraiso 打开 Win10 ISO 写入U盘，注意，隐藏选项选择无
+打开U盘，新建win10back文件夹，将sources/install.wim剪切到win10back目录下，以后想装win10系统时，再将win10back/install.wim剪切到sources目录下。
+3、Ultraiso 打开 Win7 ISO 提取sources/install.wim并复制到E盘根目录
+4、在E盘根目录新建wimmount、hotfix两个文件夹，与install.wim在同一级目录下。
+5、用解压工具解压 win7 NVMe补丁477475_intl_x64_zip.exe，将解压后的文件Windows6.1-KB2990941-v3-x64.msu复制到hotfix目录下。
+6、打开cmd，运行如下三条指令
+Dism /Mount-WIM /WimFile:E:\install.wim /Index:4 /MountDir:E:\wimmount
+Dism /Image:E:\wimmount /Add-Package /PackagePath:E:\hotfix
+Dism /Unmount-WIM /MountDir:E:\wimmount /Commit
+提示成功后NVMe 补丁集成到Win7 安装文件内
+7、将重新生成的Win7 install.wim 文件复制到 U盘内的sources目录下，win7启动盘制作完成
+
+三、安装win7系统到intel 600p ssd硬盘
+1、用第二步制作的win7启动盘启动电脑
+2、进入win10系统安装介面，不要急，继续。在选择安装OS时，选项变成了win7系统选项。
+3、进入选择安装到硬盘分区时，将所有分区都删除，再在SSD磁盘上新建主分区，并将系统安装到此主分区。如果不删除已存在的分区而直接安装系统，安装完成后电脑重启时可能找不到刚刚安装的win7系统，原因是引导分区错误。
+
+备注：
+有人说第二步的3、4、5、6、7不需要。直接用win7 iso中的install.wim替换掉win10 iso中的install.wim，也一样可行。未验证！！！
